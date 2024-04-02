@@ -1,8 +1,9 @@
-package com.example.loginregister;
+package com.example.loginregister.GameQuizzes;
+
+import static com.example.loginregister.Utilities.Requests.updateFromPHP;
+import static com.example.loginregister.Utilities.Requests.updatePoints;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,6 +11,10 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.loginregister.R;
+import com.example.loginregister.Models.UserSingleton;
+import com.example.loginregister.Utilities.DesignFunctionalities;
 import com.vishnusivadas.advanced_httpurlconnection.FetchData;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +26,20 @@ public class QuestionActivity extends AppCompatActivity {
     private int currentQuestionIndex = 0;
     int total_points, question_points, nTotalPointsGained = 0;
     boolean pointsUpdated = false;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DesignFunctionalities.hideSystemUI(this); // Call hideSystemUI method from DesignFunctionalities
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            DesignFunctionalities.hideSystemUI(this); // Call hideSystemUI method from DesignFunctionalities
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +59,7 @@ public class QuestionActivity extends AppCompatActivity {
         categoryTextView.setText("Category: " + category);
 
         // Fetch questions related to the selected category
-        FetchData fetchData = new FetchData("http://192.168.220.238/LoginRegister/readquestions.php?category=" + category);
+        FetchData fetchData = new FetchData("http://192.168.69.107/LoginRegister/readquestions.php?category=" + category);
         if (fetchData.startFetch()) {
             if (fetchData.onComplete()) {
                 String result = fetchData.getResult();
@@ -146,7 +165,7 @@ public class QuestionActivity extends AppCompatActivity {
                 endQuizButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        QASingleton.updateFromPHP(QASingleton.getUsername());
+                        updateFromPHP(QASingleton.getUsername());
                         finish();
                     }
                 });
@@ -158,10 +177,19 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void checkAnswer(String userAnswer) {
-        char correctAnswer = 0;
+        char correctAnswerChar = findCorrectAnswer();
         final TextView totalPointsGained = findViewById(R.id.tv2_points);
         totalPointsGained.setText("points gained: " + nTotalPointsGained);
 
+        if (userAnswer.equalsIgnoreCase(String.valueOf(correctAnswerChar))) {
+            handleCorrectAnswer();
+        } else {
+            handleIncorrectAnswer();
+        }
+    }
+
+    private char findCorrectAnswer() {
+        char correctAnswer = 0;
         try {
             JSONObject questionObject = questionsArray.getJSONObject(currentQuestionIndex);
             JSONArray answersArray = questionObject.getJSONArray("answers");
@@ -175,50 +203,45 @@ public class QuestionActivity extends AppCompatActivity {
                     break;
                 }
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return correctAnswer;
+    }
 
-            // Compare the user's answer with the correct answer
-            if (userAnswer.equalsIgnoreCase(String.valueOf(correctAnswer))) {
-                // Correct Answer
-                String imageName = questionObject.getString("imageName");
-                int resourceId = getResources().getIdentifier(imageName, "drawable", getPackageName());
-                ImageView qImage = findViewById(R.id.qimage);
-                qImage.setImageResource(resourceId);
-                qImage.setVisibility(View.VISIBLE); // Make the ImageView visible
-                Toast.makeText(QuestionActivity.this, "Correct Answer!", Toast.LENGTH_SHORT).show();
+    private void handleCorrectAnswer() {
+        Toast.makeText(QuestionActivity.this, "Correct Answer!", Toast.LENGTH_SHORT).show();
+        try {
+            JSONObject questionObject = questionsArray.getJSONObject(currentQuestionIndex);
+            String imageName = questionObject.getString("imageName");
+            int resourceId = getResources().getIdentifier(imageName, "drawable", getPackageName());
+            ImageView qImage = findViewById(R.id.qimage);
+            qImage.setImageResource(resourceId);
+            qImage.setVisibility(View.VISIBLE); // Make the ImageView visible
 
-                // Update total points
-                total_points += question_points;
-                if(!pointsUpdated){
-                    nTotalPointsGained += question_points;
-                    totalPointsGained.setText("points gained: " + nTotalPointsGained);
-                    updatePoints(QASingleton.getUsername(), total_points);
-                    pointsUpdated = true;
-                }
-            } else {
-                // Incorrect Answer
-                Toast.makeText(QuestionActivity.this, "Incorrect Answer!", Toast.LENGTH_SHORT).show();
+            // Update total points
+            total_points += question_points;
+            if (!pointsUpdated) {
+                nTotalPointsGained += question_points;
+                final TextView totalPointsGained = findViewById(R.id.tv2_points);
+                totalPointsGained.setText("points gained: " + nTotalPointsGained);
+                updatePoints(QASingleton.getUsername(), total_points);
+                pointsUpdated = true;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+    private void handleIncorrectAnswer() {
+        Toast.makeText(QuestionActivity.this, "Incorrect Answer!", Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        QASingleton.updateFromPHP(QASingleton.getUsername());
+        updateFromPHP(QASingleton.getUsername());
         finish();
-    }
-    private void updatePoints(String username, int urlPoints) {
-        // Save result to DB
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                FetchData fetchData = new FetchData("http://192.168.220.238/LoginRegister/updatepoints.php?username=" + username  + "&points=" + urlPoints);
-                fetchData.startFetch();
-            }
-        });
     }
 }
 

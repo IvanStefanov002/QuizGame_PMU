@@ -1,12 +1,12 @@
-package com.example.loginregister;
+package com.example.loginregister.EntryModule;
+
+import static com.example.loginregister.Utilities.Requests.updateFromPHP;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,8 +14,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.loginregister.Interfaces.RequestsHandler;
+import com.example.loginregister.R;
+import com.example.loginregister.Utilities.DesignFunctionalities;
+import com.example.loginregister.Utilities.Requests;
 import com.google.android.material.textfield.TextInputEditText;
-import com.vishnusivadas.advanced_httpurlconnection.PutData;
 
 public class Login extends AppCompatActivity {
     TextInputEditText textInputEditTextUsername, textInputEditTextPassword;
@@ -23,6 +26,20 @@ public class Login extends AppCompatActivity {
     TextView textViewSignUp;
     ImageView tweet, insta, twit;
     Button buttonLogin;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DesignFunctionalities.hideSystemUI(this); // Call hideSystemUI method from DesignFunctionalities
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            DesignFunctionalities.hideSystemUI(this); // Call hideSystemUI method from DesignFunctionalities
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,38 +95,21 @@ public class Login extends AppCompatActivity {
 
                 if(!username.equals("") && !password.equals("")) {
                     progressBar.setVisibility(View.VISIBLE);
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
+                    Requests.Login(username, password, getApplicationContext(), new RequestsHandler() {
                         @Override
-                        public void run() {
-                            String[] field = new String[2];
-                            field[0] = "username";
-                            field[1] = "password";
-
-                            //Creating array for data
-                            String[] data = new String[2];
-                            data[0] = username;
-                            data[1] = password;
-                            PutData putData = new PutData("http://192.168.220.238/LoginRegister/login.php", "POST", field, data);
-                            if (putData.startPut()) {
-                                if (putData.onComplete()) {
-                                    progressBar.setVisibility(View.GONE);
-                                    String result = putData.getResult();
-                                    if(result.equals("Login Success")){
-                                        UserSingleton current_user = UserSingleton.getInstance();
-                                        current_user.updateFromPHP(data[0].toString());
-
-                                        //send message to user for successful login
-                                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplication(), MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }else{
-                                        //send message to user for NOT successful login
-                                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
+                        public void onSuccess(String data) {
+                            progressBar.setVisibility(View.GONE);
+                            if(data.equals("Login Success")) {
+                                updateFromPHP(username);
+                                Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplication(), MainActivity.class);
+                                startActivity(intent);
                             }
+                        }
+                        @Override
+                        public void onFailure(String data) {
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }else {
@@ -118,6 +118,7 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
     private void gotoUrl(String s) {
         Uri uri = Uri.parse(s);
         startActivity(new Intent(Intent.ACTION_VIEW, uri));

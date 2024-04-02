@@ -11,4 +11,15 @@
     <string name="signuphere">Don\'t have account? <u>SignUp</u></string>
     <string name="loginhere">Already have account? <u>Login</u></string>
     <string name="social">Follow us on Social Media!</string>
+
+
+    <string name="art">Изкуство</string>
+    <string name="nature">Природно наследство</string>
+    <string name="culture">Култура</string>
+    <string name="geoguessr">Геогесър</string>
+    <string name="tictactoe">Морски Шах</string>
+    <string name="history">История</string>
+    <string name="gameheader">Избери категория игра!</string>
+    <string name="gamefooter">Играй и трупай точки!</string>
+    <string name="geoguess_game">Игра на Геогесър на картата на България!</string>
 </resources>

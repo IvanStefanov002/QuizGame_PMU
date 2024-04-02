@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".MainActivity"
+    tools:context=".EntryModule.MainActivity"
     android:backgroundTint="@color/custom">
 
     <!-- Header -->
@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose a Quiz Categorie!"
+            android:text="@string/gameheader"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/black"/>
@@ -66,7 +66,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="You are free to play any game you would like!"
+            android:text="@string/gamefooter"
             android:textSize="16sp"
             android:textColor="@color/black"
             android:textStyle="bold"/>
@@ -103,14 +103,15 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/history" />
+                    android:src="@drawable/art" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:fontFamily="@font/poppinsbold"
-                    android:text="History"
+                    android:text="@string/art"
+                    android:textAlignment="center"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
             </RelativeLayout>
@@ -137,14 +138,15 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/geography" />
+                    android:src="@drawable/nature" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:fontFamily="@font/poppinsbold"
-                    android:text="Geography"
+                    android:text="@string/nature"
+                    android:textAlignment="center"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
             </RelativeLayout>
@@ -170,14 +172,15 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/program" />
+                    android:src="@drawable/culture" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:fontFamily="@font/poppinsbold"
-                    android:text="Programming"
+                    android:text="@string/culture"
+                    android:textAlignment="center"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
             </RelativeLayout>
@@ -203,14 +206,15 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/sport" />
+                    android:src="@drawable/history" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:fontFamily="@font/poppinsbold"
-                    android:text="Sport"
+                    android:text="@string/history"
+                    android:textAlignment="center"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
             </RelativeLayout>
@@ -243,7 +247,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:fontFamily="@font/poppinsbold"
-                    android:text="TicTacToe"
+                    android:text="@string/tictactoe"
+                    android:textAlignment="center"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
             </RelativeLayout>
@@ -263,20 +268,21 @@
                 android:background="@android:color/black">
 
                 <ImageButton
-                    android:id="@+id/sudocu_button"
+                    android:id="@+id/geoguesser_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/program" />
+                    android:src="@drawable/geoguessr" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:fontFamily="@font/poppinsbold"
-                    android:text="Sudoku"
+                    android:text="@string/geoguessr"
+                    android:textAlignment="center"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
             </RelativeLayout>

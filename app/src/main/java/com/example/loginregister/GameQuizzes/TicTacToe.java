@@ -1,4 +1,4 @@
-package com.example.loginregister;
+package com.example.loginregister.GameQuizzes;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,6 +12,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.loginregister.R;
+import com.example.loginregister.Models.UserSingleton;
+import com.example.loginregister.Utilities.DesignFunctionalities;
 import com.vishnusivadas.advanced_httpurlconnection.FetchData;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -21,6 +24,20 @@ public class TicTacToe extends AppCompatActivity {
     private boolean player1Turn = true;
     private int checkCount = 0;
     int total_points = 0;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DesignFunctionalities.hideSystemUI(this); // Call hideSystemUI method from DesignFunctionalities
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            DesignFunctionalities.hideSystemUI(this); // Call hideSystemUI method from DesignFunctionalities
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +129,7 @@ public class TicTacToe extends AppCompatActivity {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                FetchData fetchData = new FetchData("http://192.168.220.238/LoginRegister/updatepoints.php?username=" + username  + "&points=" + urlPoints);
+                FetchData fetchData = new FetchData("http://192.168.69.107/LoginRegister/updatepoints.php?username=" + username  + "&points=" + urlPoints);
                 fetchData.startFetch();
             }
         });

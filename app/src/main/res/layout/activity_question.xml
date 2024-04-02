@@ -63,7 +63,7 @@
         android:fontFamily="@font/poppinsbold"
         android:gravity="center_horizontal"
         android:padding="8dp"
-        android:text="Gained points: 0"
+        android:text="Gained points"
         android:textColor="#E10A0A"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/qimage"

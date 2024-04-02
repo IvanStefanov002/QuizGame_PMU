@@ -1,16 +1,22 @@
-package com.example.loginregister;
+package com.example.loginregister.EntryModule;
+
+import static com.example.loginregister.Utilities.Requests.OnResumeReadPoints;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.vishnusivadas.advanced_httpurlconnection.FetchData;
+import com.example.loginregister.GameQuizzes.GeoGuesser;
+import com.example.loginregister.GameQuizzes.QuestionActivity;
+import com.example.loginregister.Interfaces.FetchDataCallback;
+import com.example.loginregister.R;
+import com.example.loginregister.GameQuizzes.TicTacToe;
+import com.example.loginregister.Models.UserSingleton;
+import com.example.loginregister.Utilities.DesignFunctionalities;
+import com.example.loginregister.Utilities.Requests;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +25,16 @@ public class MainActivity extends AppCompatActivity  {
     UserSingleton sObject = UserSingleton.getInstance();
     private TextView usernameTextView, pointsTextView;
     int total_points = 0;
+    ImageButton historyButton, geographyButton, programmingButton, sportsButton, tictactoeButton, geoguesser;
+
+    //to hide android home buttons
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            DesignFunctionalities.hideSystemUI(this);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,16 +44,20 @@ public class MainActivity extends AppCompatActivity  {
         // Initialize TextViews
         usernameTextView = findViewById(R.id.username_text_view);
         pointsTextView = findViewById(R.id.points_text_view);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        DesignFunctionalities.hideSystemUI(this);
 
-        // Find ImageButton references for each category
-        ImageButton historyButton = findViewById(R.id.history_button);
-        ImageButton geographyButton = findViewById(R.id.geography_button);
-        ImageButton programmingButton = findViewById(R.id.programming_button);
-        ImageButton sportsButton = findViewById(R.id.sport_button);
-        ImageButton tictactoeButton = findViewById(R.id.tictactoe_button);
+        historyButton = findViewById(R.id.history_button);
+        geographyButton = findViewById(R.id.geography_button);
+        programmingButton = findViewById(R.id.programming_button);
+        sportsButton = findViewById(R.id.sport_button);
+        tictactoeButton = findViewById(R.id.tictactoe_button);
+        geoguesser = findViewById(R.id.geoguesser_button);
 
-        // Set OnClickListener for each category ImageButton
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,30 +97,28 @@ public class MainActivity extends AppCompatActivity  {
                 startActivity(intent);
             }
         });
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
+        geoguesser.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                FetchData fetchData = new FetchData("http://192.168.220.238/LoginRegister/readpoints.php?username=" + sObject.getUsername());
-                if (fetchData.startFetch()) {
-                    if (fetchData.onComplete()) {
-                        String result = fetchData.getResult();
-
-                        try {
-                            JSONObject json = new JSONObject(result);
-                            int points = json.getInt("points");
-                            total_points = points;
-                            usernameTextView.setText("Logged as: " + sObject.getUsername());
-                            pointsTextView.setText("Points: " + sObject.getPoints());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GeoGuesser.class);
+                intent.putExtra("POINTS", total_points);
+                intent.putExtra("CATEGORY", "Geoguesser");
+                startActivity(intent);
+            }
+        });
+        OnResumeReadPoints(sObject.getUsername(), new FetchDataCallback() {
+            @Override
+            public void onDataFetched(String[] result) {
+                // Handle the fetched result here
+                try {
+                    JSONObject json = new JSONObject(result[0]);
+                    int points = json.getInt("points");
+                    total_points = points;
+                    usernameTextView.setText("Logged as: " + sObject.getUsername());
+                    pointsTextView.setText("Points: " + sObject.getPoints());
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });

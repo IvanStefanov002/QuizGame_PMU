@@ -2,7 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorAccent">#4CAF50</color>
-    <color name="custom">#D3D3D3</color>
+    <color name="colorAccent">#A68BC34A</color>
+    <color name="custom">#45A9D675</color>
     <color name="red">#FF0000</color>
+    <color name="pinChecked">#EDD60C</color>
 </resources>

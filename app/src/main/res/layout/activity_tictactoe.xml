@@ -55,11 +55,11 @@
 
     <GridLayout
         android:id="@+id/gridLayout"
-        android:layout_width="394dp"
-        android:layout_height="658dp"
+        android:layout_width="330dp"
+        android:layout_height="600dp"
         android:columnCount="3"
         android:rowCount="3"
-        android:background="@color/black"
+        android:background="@color/custom"
         app:layout_constraintBottom_toTopOf="@+id/frameLayout55"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

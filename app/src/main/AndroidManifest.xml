@@ -15,9 +15,9 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.LoginRegister"
         tools:targetApi="31">
-        <activity android:name=".Login" android:screenOrientation="portrait"/>
+        <activity android:name=".EntryModule.Login" android:screenOrientation="portrait"/>
         <activity
-            android:name=".SignUp"
+            android:name=".EntryModule.MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true"
             android:screenOrientation="portrait">
@@ -26,9 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".QuestionActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".TicTacToe" android:screenOrientation="portrait"/>
+        <activity android:name=".EntryModule.SignUp" android:screenOrientation="portrait"/>
+        <activity android:name=".GameQuizzes.QuestionActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".GameQuizzes.TicTacToe" android:screenOrientation="portrait"/>
+        <activity android:name=".GameQuizzes.GeoGuesser" android:screenOrientation="landscape"/>
     </application>
 
 </manifest>
