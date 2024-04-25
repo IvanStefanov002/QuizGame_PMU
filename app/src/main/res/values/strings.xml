@@ -4,13 +4,25 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="answer">Enter you answer here</string>
+    <string name="loginheader">Добре дошли! Моля, впишете се!</string>
+    <string name="userInfo">Информация за потребителя:</string>
+    <string name="changePictureButton">Смяна на снимка</string>
+    <string name="checkAnswerButton">Провери отговора</string>
+    <string name="questionPointsHint">Въпрос точки</string>
 
     <string name="signup">SignUp</string>
     <string name="fullname">FullName</string>
     <string name="email">Email</string>
-    <string name="signuphere">Don\'t have account? <u>SignUp</u></string>
-    <string name="loginhere">Already have account? <u>Login</u></string>
+    <string name="signuphere">Нямаш акаунт? <u>Регистрация</u></string>
+    <string name="loginhere">Вече имаш акаунт? <u>Вход</u></string>
     <string name="social">Follow us on Social Media!</string>
+    <string name="guess">Познай</string>
+    <string name="nextQuestionButton">Следващ въпрос</string>
+    <string name="endGameButton">Край на играта</string>
+    <string name="questionText">Текст на въпроса</string>
+    <string name="categoryQuizes">Кратки въпросници</string>
+    <string name="categoryGames">Игри</string>
+    <string name="socialMediaAccounts">Социални мрежи</string>
 
 
     <string name="art">Изкуство</string>
@@ -19,7 +31,19 @@
     <string name="geoguessr">Геогесър</string>
     <string name="tictactoe">Морски Шах</string>
     <string name="history">История</string>
-    <string name="gameheader">Избери категория игра!</string>
+    <string name="mainScreenHeader">Избери игра от категориите!</string>
     <string name="gamefooter">Играй и трупай точки!</string>
     <string name="geoguess_game">Игра на Геогесър на картата на България!</string>
+    <string name="geoguesser_rule">Означете областта на картата!</string>
+    <string name="ranking_header">Ranking list на първите 10 по точки потребителя!</string>
+
+    <string name="pin1">pin1</string>
+    <string name="pin2">pin2</string>
+    <string name="pin3">pin3</string>
+    <string name="pin4">pin4</string>
+    <string name="pin5">pin5</string>
+    <string name="pin6">pin6</string>
+    <string name="pin7">pin7</string>
+    <string name="pin8">pin8</string>
+    <string name="pin9">pin9</string>
 </resources>

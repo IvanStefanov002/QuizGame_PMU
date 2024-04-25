@@ -1,0 +1,7 @@
+<!-- custom_radio_button_background.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Unchecked state -->
+    <item android:drawable="@android:color/transparent" android:state_checked="false" />
+    <!-- Checked state -->
+    <item android:drawable="@android:color/transparent" android:state_checked="true" />
+</selector>

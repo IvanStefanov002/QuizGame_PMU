@@ -3,12 +3,19 @@ package com.example.loginregister.EntryModule;
 import static com.example.loginregister.Utilities.Requests.OnResumeReadPoints;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.loginregister.Adapters.DropDownAdapter;
 import com.example.loginregister.GameQuizzes.GeoGuesser;
 import com.example.loginregister.GameQuizzes.QuestionActivity;
 import com.example.loginregister.Interfaces.FetchDataCallback;
@@ -16,16 +23,16 @@ import com.example.loginregister.R;
 import com.example.loginregister.GameQuizzes.TicTacToe;
 import com.example.loginregister.Models.UserSingleton;
 import com.example.loginregister.Utilities.DesignFunctionalities;
-import com.example.loginregister.Utilities.Requests;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity  {
     UserSingleton sObject = UserSingleton.getInstance();
-    private TextView usernameTextView, pointsTextView;
-    int total_points = 0;
-    ImageButton historyButton, geographyButton, programmingButton, sportsButton, tictactoeButton, geoguesser;
+    TextView usernameTextView;
+    ImageButton historyButton, natureButton, cultureButton, artButton, tictactoeButton, geoguesser;
+    ImageView facebook, twitter, instagram;
+    Spinner hSpinner;
 
     //to hide android home buttons
     @Override
@@ -41,9 +48,23 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize TextViews
+        // Initialize variables
+        facebook = findViewById(R.id.facebook);
+        instagram = findViewById(R.id.instagram);
+        twitter = findViewById(R.id.twitter);
         usernameTextView = findViewById(R.id.username_text_view);
-        pointsTextView = findViewById(R.id.points_text_view);
+        artButton = findViewById(R.id.art_button);
+        natureButton = findViewById(R.id.nature_button);
+        cultureButton = findViewById(R.id.culture_button);
+        historyButton = findViewById(R.id.history_button);
+        tictactoeButton = findViewById(R.id.tictactoe_button);
+        geoguesser = findViewById(R.id.geoguesser_button);
+        hSpinner = findViewById(R.id.hamburger_spinner);
+
+
+
+        DropDownAdapter adapter = new DropDownAdapter(this, new String[]{"Презареди", "Профил", "Класация", "Отписване"});
+        hSpinner.setAdapter(adapter);
     }
 
     @Override
@@ -51,41 +72,66 @@ public class MainActivity extends AppCompatActivity  {
         super.onResume();
         DesignFunctionalities.hideSystemUI(this);
 
-        historyButton = findViewById(R.id.history_button);
-        geographyButton = findViewById(R.id.geography_button);
-        programmingButton = findViewById(R.id.programming_button);
-        sportsButton = findViewById(R.id.sport_button);
-        tictactoeButton = findViewById(R.id.tictactoe_button);
-        geoguesser = findViewById(R.id.geoguesser_button);
+        hSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedItem = (String) parentView.getItemAtPosition(position);
+                // Perform logic based on the selected item
+                switch (selectedItem) {
+                    case "Презареди":
+                        break;
+                    case "Профил":
+                        // Start ProfileActivity
+                        Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                        startActivity(profileIntent);
+                        break;
+                    case "Класация":
+                        // Start RankingList Activity
+                        Intent rankingListIntent = new Intent(MainActivity.this, RankingList.class);
+                        startActivity(rankingListIntent);
+                        break;
+                    case "Отписване":
+                        // Handle Logout logic
+                        finish();
+                        break;
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing if nothing is selected
+            }
+        });
+
+        hSpinner.setSelection(0);
 
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start QuestionActivity and pass the category information
-                startQuestionActivity("History", total_points, String.valueOf(usernameTextView));
+                startQuestionActivity("History", sObject.getPoints(), sObject.getUsername());
             }
         });
 
-        geographyButton.setOnClickListener(new View.OnClickListener() {
+        natureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start QuestionActivity and pass the category information
-                startQuestionActivity("Geography", total_points, String.valueOf(usernameTextView));
+                startQuestionActivity("Nature", sObject.getPoints(), sObject.getUsername());
             }
         });
 
-        programmingButton.setOnClickListener(new View.OnClickListener() {
+        artButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start QuestionActivity and pass the category information
-                startQuestionActivity("Programming", total_points, String.valueOf(usernameTextView));
+                startQuestionActivity("Art", sObject.getPoints(), sObject.getUsername());
             }
         });
 
-        sportsButton.setOnClickListener(new View.OnClickListener() {
+        cultureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startQuestionActivity("Sports", total_points, String.valueOf(usernameTextView));
+                startQuestionActivity("Culture", sObject.getPoints(), sObject.getUsername());
             }
         });
 
@@ -93,7 +139,7 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, TicTacToe.class);
-                intent.putExtra("POINTS", total_points);
+                intent.putExtra("POINTS", sObject.getPoints());
                 startActivity(intent);
             }
         });
@@ -102,11 +148,33 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, GeoGuesser.class);
-                intent.putExtra("POINTS", total_points);
+                intent.putExtra("POINTS", sObject.getPoints());
                 intent.putExtra("CATEGORY", "Geoguesser");
                 startActivity(intent);
             }
         });
+
+        facebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoUrl("https://www.facebook.com/");
+            }
+        });
+
+        instagram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoUrl("https://www.instagram.com/");
+            }
+        });
+
+        twitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoUrl("https://www.twitter.com/");
+            }
+        });
+
         OnResumeReadPoints(sObject.getUsername(), new FetchDataCallback() {
             @Override
             public void onDataFetched(String[] result) {
@@ -114,9 +182,8 @@ public class MainActivity extends AppCompatActivity  {
                 try {
                     JSONObject json = new JSONObject(result[0]);
                     int points = json.getInt("points");
-                    total_points = points;
-                    usernameTextView.setText("Logged as: " + sObject.getUsername());
-                    pointsTextView.setText("Points: " + sObject.getPoints());
+                    sObject.setPoints(points);
+                    usernameTextView.setText("Вписан като: " + sObject.getUsername());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -130,5 +197,10 @@ public class MainActivity extends AppCompatActivity  {
         intent.putExtra("POINTS", points);
         intent.putExtra("USERNAME", username);
         startActivity(intent);
+    }
+
+    private void gotoUrl(String s) {
+        Uri uri = Uri.parse(s);
+        startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
 }

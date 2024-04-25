@@ -1,7 +1,6 @@
 package com.example.loginregister.GameQuizzes;
 
 import static com.example.loginregister.Utilities.Requests.updateFromPHP;
-import static com.example.loginregister.Utilities.Requests.updatePoints;
 
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.loginregister.R;
 import com.example.loginregister.Models.UserSingleton;
 import com.example.loginregister.Utilities.DesignFunctionalities;
-import com.vishnusivadas.advanced_httpurlconnection.FetchData;
+import com.example.loginregister.Utilities.Requests;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +25,8 @@ public class QuestionActivity extends AppCompatActivity {
     private int currentQuestionIndex = 0;
     int total_points, question_points, nTotalPointsGained = 0;
     boolean pointsUpdated = false;
+    RadioButton bAAnswer, bBAnswer, bCAnswer;
+    Button checkAnswerButton, nextQuestionButton;
 
     @Override
     protected void onResume() {
@@ -50,68 +51,64 @@ public class QuestionActivity extends AppCompatActivity {
         String category = getIntent().getStringExtra("CATEGORY");
         total_points = getIntent().getIntExtra("POINTS", 0);
 
-        final RadioButton bAAnswer = findViewById(R.id.answer_a_button); // Initialize answer_a_button
-        final RadioButton bBAnswer = findViewById(R.id.answer_b_button); // Initialize answer_b_button
-        final RadioButton bCAnswer = findViewById(R.id.answer_c_button); // Initialize answer_c_button
-        final Button nextQuestionButton = findViewById(R.id.next_question_button); // Initialize next_question_button
-        final Button checkAnswerButton = findViewById(R.id.check_answer_button);// Initialize checkAnswerButton
+        bAAnswer = findViewById(R.id.answer_a_button); // Initialize answer_a_button
+        bBAnswer = findViewById(R.id.answer_b_button); // Initialize answer_b_button
+        bCAnswer = findViewById(R.id.answer_c_button); // Initialize answer_c_button
+        nextQuestionButton = findViewById(R.id.next_question_button); // Initialize next_question_button
+        checkAnswerButton = findViewById(R.id.check_answer_button);// Initialize checkAnswerButton
         TextView categoryTextView = findViewById(R.id.text_header);
-        categoryTextView.setText("Category: " + category);
+        categoryTextView.setText("Категория: " + category);
 
-        // Fetch questions related to the selected category
-        FetchData fetchData = new FetchData("http://192.168.69.107/LoginRegister/readquestions.php?category=" + category);
-        if (fetchData.startFetch()) {
-            if (fetchData.onComplete()) {
-                String result = fetchData.getResult();
-                try {
-                    questionsArray = new JSONArray(result);
+        String result = Requests.readQuestions(category);
+        try {
+            questionsArray = new JSONArray(result);
 
-                    // Display the current question
+            // Display the current question
+            displayQuestion(bAAnswer, bBAnswer, bCAnswer);
+
+            // Set click listener for the "Next Question" button
+            nextQuestionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    currentQuestionIndex++;
+                    // Display the next question
                     displayQuestion(bAAnswer, bBAnswer, bCAnswer);
-
-                    // Set click listener for the "Next Question" button
-                    nextQuestionButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            currentQuestionIndex++;
-                            // Display the next question
-                            displayQuestion(bAAnswer, bBAnswer, bCAnswer);
-                        }
-                    });
-
-                    // Set click listener for the "Check Answer" button
-                    checkAnswerButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // Get the text of the selected button
-                            String selectedAnswer = null;
-                            if (bAAnswer.isChecked()) {
-                                bAAnswer.setChecked(false);
-                                selectedAnswer = "A";
-                            } else if (bBAnswer.isChecked()) {
-                                bBAnswer.setChecked(false);
-                                selectedAnswer = "B";
-                            } else if (bCAnswer.isChecked()) {
-                                bCAnswer.setChecked(false);
-                                selectedAnswer = "C";
-                            }
-
-                            // Check if any answer is selected
-                            if (selectedAnswer != null) {
-                                // Call method to check the user's answer
-                                checkAnswer(selectedAnswer);
-                            } else {
-                                // No answer selected, show a message to the user
-                                Toast.makeText(QuestionActivity.this, "Please select an answer", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-            }
+            });
+
+            // Set click listener for the "Check Answer" button
+            checkAnswerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Get the text of the selected button
+                    String selectedAnswer = null;
+                    if (bAAnswer.isChecked()) {
+                        bAAnswer.setChecked(false);
+                        selectedAnswer = "A";
+                    } else if (bBAnswer.isChecked()) {
+                        bBAnswer.setChecked(false);
+                        selectedAnswer = "B";
+                    } else if (bCAnswer.isChecked()) {
+                        bCAnswer.setChecked(false);
+                        selectedAnswer = "C";
+                    }
+
+                    // Check if any answer is selected
+                    if (selectedAnswer != null) {
+                        // Call method to check the user's answer
+                        checkAnswer(selectedAnswer);
+                        checkAnswerButton.setVisibility(View.GONE);
+                    } else {
+                        // No answer selected, show a message to the user
+                        Toast.makeText(QuestionActivity.this, "Моля изберете отговор", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
+
     private void displayQuestion(RadioButton aAnswer, RadioButton bAnswer, RadioButton cAnswer) {
         aAnswer.setChecked(false);
         bAnswer.setChecked(false);
@@ -119,12 +116,14 @@ public class QuestionActivity extends AppCompatActivity {
         pointsUpdated = false;
         Button endQuizButton = findViewById(R.id.end_quiz);
         endQuizButton.setVisibility(View.GONE);
-
-        ImageView qImage = findViewById(R.id.qimage);
-        qImage.setVisibility(View.GONE);
+        checkAnswerButton.setVisibility(View.VISIBLE);
 
         try {
             JSONObject questionObject = questionsArray.getJSONObject(currentQuestionIndex);
+            String imageName = questionObject.getString("imageName");
+            int resourceId = getResources().getIdentifier(imageName, "drawable", getPackageName());
+            ImageView qImage = findViewById(R.id.qimage);
+            qImage.setImageResource(resourceId);
             String question = questionObject.getString("question");
             question_points = questionObject.getInt("points");
 
@@ -151,10 +150,10 @@ public class QuestionActivity extends AppCompatActivity {
 
             // Update UI with the question, answers, and points
             TextView tv_points = findViewById(R.id.tv_points);
-            tv_points.setText("This question gives: " + question_points + " points");
+            tv_points.setText("Въпросът носи: " + question_points + " точки");
 
             TextView questionsTextView = findViewById(R.id.questions_text_view);
-            questionsTextView.setText((currentQuestionIndex + 1) + ". Question: " + question + "\n");
+            questionsTextView.setText((currentQuestionIndex + 1) + ". Въпрос: " + question + "\n");
 
             // Enable/disable the "Next Question" button based on the current question index
             Button nextQuestionButton = findViewById(R.id.next_question_button);
@@ -179,7 +178,7 @@ public class QuestionActivity extends AppCompatActivity {
     private void checkAnswer(String userAnswer) {
         char correctAnswerChar = findCorrectAnswer();
         final TextView totalPointsGained = findViewById(R.id.tv2_points);
-        totalPointsGained.setText("points gained: " + nTotalPointsGained);
+        totalPointsGained.setText("получени точки: " + nTotalPointsGained);
 
         if (userAnswer.equalsIgnoreCase(String.valueOf(correctAnswerChar))) {
             handleCorrectAnswer();
@@ -210,31 +209,20 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void handleCorrectAnswer() {
-        Toast.makeText(QuestionActivity.this, "Correct Answer!", Toast.LENGTH_SHORT).show();
-        try {
-            JSONObject questionObject = questionsArray.getJSONObject(currentQuestionIndex);
-            String imageName = questionObject.getString("imageName");
-            int resourceId = getResources().getIdentifier(imageName, "drawable", getPackageName());
-            ImageView qImage = findViewById(R.id.qimage);
-            qImage.setImageResource(resourceId);
-            qImage.setVisibility(View.VISIBLE); // Make the ImageView visible
-
-            // Update total points
-            total_points += question_points;
-            if (!pointsUpdated) {
-                nTotalPointsGained += question_points;
-                final TextView totalPointsGained = findViewById(R.id.tv2_points);
-                totalPointsGained.setText("points gained: " + nTotalPointsGained);
-                updatePoints(QASingleton.getUsername(), total_points);
-                pointsUpdated = true;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        Toast.makeText(QuestionActivity.this, "Верен отговор!", Toast.LENGTH_SHORT).show();
+        // Update total points
+        total_points += question_points;
+        if (!pointsUpdated) {
+            nTotalPointsGained += question_points;
+            final TextView totalPointsGained = findViewById(R.id.tv2_points);
+            totalPointsGained.setText("получени точки: " + nTotalPointsGained);
+            Requests.updatePoints(QASingleton.getUsername(), total_points);
+            pointsUpdated = true;
         }
     }
 
     private void handleIncorrectAnswer() {
-        Toast.makeText(QuestionActivity.this, "Incorrect Answer!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(QuestionActivity.this, "Грешен отговор!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

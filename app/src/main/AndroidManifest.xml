@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+
 
     <application
         android:allowBackup="true"
@@ -15,9 +18,9 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.LoginRegister"
         tools:targetApi="31">
-        <activity android:name=".EntryModule.Login" android:screenOrientation="portrait"/>
+        <activity android:name=".EntryModule.MainActivity" android:screenOrientation="portrait"/>
         <activity
-            android:name=".EntryModule.MainActivity"
+            android:name=".EntryModule.Login"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true"
             android:screenOrientation="portrait">
@@ -30,6 +33,8 @@
         <activity android:name=".GameQuizzes.QuestionActivity" android:screenOrientation="portrait"/>
         <activity android:name=".GameQuizzes.TicTacToe" android:screenOrientation="portrait"/>
         <activity android:name=".GameQuizzes.GeoGuesser" android:screenOrientation="landscape"/>
+        <activity android:name=".EntryModule.RankingList" android:screenOrientation="portrait"/>
+        <activity android:name=".EntryModule.ProfileActivity" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

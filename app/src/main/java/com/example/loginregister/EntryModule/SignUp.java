@@ -42,6 +42,7 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        DesignFunctionalities.hideSystemUI(this);
 
         textInputEditTextFullname = findViewById(R.id.fullname);
         textInputEditTextUsername = findViewById(R.id.username);
@@ -76,9 +77,11 @@ public class SignUp extends AppCompatActivity {
                         public void onSuccess(String data) {
                             progressBar.setVisibility(View.GONE);
                             if(data.equals("Sign Up Success")) {
-                                Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Успешна регистрация!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getApplication(), Login.class);
                                 startActivity(intent);
+                            }else{
+                                Toast.makeText(getApplicationContext(), "Неуспешна регистрация!", Toast.LENGTH_SHORT).show();
                             }
                         }
                         @Override
@@ -88,7 +91,7 @@ public class SignUp extends AppCompatActivity {
                         }
                     });
                 }else {
-                    Toast.makeText(getApplicationContext(), "All fields are required!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Всички полета са задължителни!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -41,10 +41,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="3dp"
-        android:text="Check Answer"
+        android:layout_marginBottom="50dp"
         android:backgroundTint="#FFC107"
-        app:layout_constraintBottom_toTopOf="@+id/next_question_button"
+        android:text="@string/guess"
+        app:layout_constraintBottom_toBottomOf="@+id/next_question_button"
         app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
-        android:text="Next Question"
+        android:text="@string/nextQuestionButton"
         android:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/question_frame"
         app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
@@ -66,37 +66,63 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
-        android:text="End Quiz"
         android:backgroundTint="@color/red"
+        android:text="@string/endGameButton"
         app:layout_constraintBottom_toBottomOf="@+id/question_frame"
         app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
         app:layout_constraintStart_toStartOf="parent" />
 
     <FrameLayout
-        android:id="@+id/question_frame"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:paddingTop="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout55"
+        android:id="@+id/question_frame2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="3dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout2">
+
+        <TextView
+            android:id="@+id/game_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/poppinsmedium"
+            android:gravity="center"
+            android:text="@string/geoguesser_rule"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/question_text" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/question_frame"
+        android:layout_width="205dp"
+        android:layout_height="265dp"
+        android:paddingLeft="3dp"
+        android:paddingTop="3dp"
+        android:paddingRight="3dp"
+        app:layout_constraintBottom_toTopOf="@+id/frameLayout55"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/question_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/poppinsmedium"
             android:gravity="center"
-            android:text="question text box"
+            android:text="@string/questionText"
             android:textAlignment="center"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </FrameLayout>
-
-
 
     <FrameLayout
         android:id="@+id/map_frame"
@@ -123,8 +149,10 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="60dp"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="90dp"
                 android:background="@drawable/pin"
+                android:text="@string/pin1"
+                android:textColor="@android:color/transparent"
                 android:button="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -136,6 +164,8 @@
                 android:layout_marginStart="440dp"
                 android:layout_marginTop="0dp"
                 android:background="@drawable/pin"
+                android:text="@string/pin2"
+                android:textColor="@android:color/transparent"
                 android:button="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -145,8 +175,10 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="80dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="35dp"
                 android:background="@drawable/pin"
+                android:text="@string/pin3"
+                android:textColor="@android:color/transparent"
                 android:button="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -155,9 +187,11 @@
                 android:id="@+id/pin4"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="280dp"
+                android:layout_marginStart="250dp"
                 android:layout_marginTop="-140dp"
                 android:background="@drawable/pin"
+                android:text="@string/pin4"
+                android:textColor="@android:color/transparent"
                 android:button="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -167,8 +201,10 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="280dp"
-                android:layout_marginTop="-140dp"
+                android:layout_marginTop="-130dp"
                 android:background="@drawable/pin"
+                android:text="@string/pin5"
+                android:textColor="@android:color/transparent"
                 android:button="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -177,9 +213,11 @@
                 android:id="@+id/pin6"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="520dp"
-                android:layout_marginTop="-100dp"
+                android:layout_marginStart="470dp"
+                android:layout_marginTop="-80dp"
                 android:background="@drawable/pin"
+                android:text="@string/pin6"
+                android:textColor="@android:color/transparent"
                 android:button="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -188,9 +226,11 @@
                 android:id="@+id/pin7"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="280dp"
-                android:layout_marginTop="180dp"
+                android:layout_marginStart="270dp"
+                android:layout_marginTop="155dp"
                 android:background="@drawable/pin"
+                android:text="@string/pin7"
+                android:textColor="@android:color/transparent"
                 android:button="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -202,6 +242,8 @@
                 android:layout_marginStart="160dp"
                 android:layout_marginTop="-130dp"
                 android:background="@drawable/pin"
+                android:text="@string/pin8"
+                android:textColor="@android:color/transparent"
                 android:button="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -213,11 +255,13 @@
                 android:layout_marginStart="380dp"
                 android:layout_marginTop="-140dp"
                 android:background="@drawable/pin"
+                android:text="@string/pin9"
+                android:textColor="@android:color/transparent"
                 android:button="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-    </RadioGroup>
+        </RadioGroup>
 
     </FrameLayout>
 
@@ -226,7 +270,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.25" /> <!-- 25% of the width -->
+        app:layout_constraintGuide_percent="0.28" /> <!-- 30% of the width -->
 
     <FrameLayout
         android:id="@+id/frameLayout55"

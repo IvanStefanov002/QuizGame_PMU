@@ -2,8 +2,6 @@ package com.example.loginregister.GameQuizzes;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,7 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.loginregister.R;
 import com.example.loginregister.Models.UserSingleton;
 import com.example.loginregister.Utilities.DesignFunctionalities;
-import com.vishnusivadas.advanced_httpurlconnection.FetchData;
+import com.example.loginregister.Utilities.Requests;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -49,6 +47,7 @@ public class TicTacToe extends AppCompatActivity {
         GifImageView fireworks = findViewById(R.id.fw);
         ConstraintLayout mPage = findViewById(R.id.tictactoe);
         TextView theader = findViewById(R.id.text_header);
+        TextView tvfooter = findViewById(R.id.tvfooter);
 
         int points = getIntent().getIntExtra("POINTS", 0);
         total_points = points;
@@ -62,7 +61,7 @@ public class TicTacToe extends AppCompatActivity {
                 int buttonId = getResources().getIdentifier(button, "id", getPackageName());
                 if(buttonId!=0) {
                     buttons[i][j] = findViewById(buttonId); // This line could cause NullPointerException if buttons[i][j] is not initialized properly
-                    theader.setText("Tic-Tac-Toe game! On turn is X");
+                    theader.setText("Игра на Морски шах! На ред е X");
                     buttons[i][j].setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -71,17 +70,17 @@ public class TicTacToe extends AppCompatActivity {
                             }
                             if (player1Turn) {
                                 ((Button) v).setText("X");
-                                theader.setText("Tic-Tac-Toe game! On turn is 0");
+                                theader.setText("Игра на Морски шах! На ред е 0");
                             } else {
                                 ((Button) v).setText("O");
-                                theader.setText("Tic-Tac-Toe game! On turn is X");
+                                theader.setText("Игра на Морски шах! На ред е X");
                             }
 
                             String winner = checkForWinner();
                             if (winner != null) {
                                 disableButtons();
-                                Toast.makeText(getApplicationContext(), "Player " + winner + " wins!", Toast.LENGTH_SHORT).show();
-                                updatePoints(GameSingleton.getUsername(), total_points);
+                                Toast.makeText(getApplicationContext(), "Играч " + winner + " печели!", Toast.LENGTH_SHORT).show();
+                                Requests.updatePoints(GameSingleton.getUsername(), total_points);
                                 hideButtons();
                                 mPage.setBackgroundColor(Color.BLACK);
                                 fireworks.setVisibility(View.VISIBLE);
@@ -96,7 +95,8 @@ public class TicTacToe extends AppCompatActivity {
 
                             }else {
                                 if(checkCount==9){
-                                    Toast.makeText(getApplicationContext(), "Draw! Nobody wins!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Равен! Никой не печели!", Toast.LENGTH_SHORT).show();
+                                    tvfooter.setVisibility(View.GONE);
                                     disableButtons();
                                     hideButtons();
                                     mPage.setBackgroundColor(Color.BLACK);
@@ -123,17 +123,6 @@ public class TicTacToe extends AppCompatActivity {
         }
     }
 
-    private void updatePoints(String username, int urlPoints) {
-        // Save result to DB
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                FetchData fetchData = new FetchData("http://192.168.69.107/LoginRegister/updatepoints.php?username=" + username  + "&points=" + urlPoints);
-                fetchData.startFetch();
-            }
-        });
-    }
     private String checkForWinner() {
         checkCount+=1;
         String[][] field = new String[3][3];

@@ -6,4 +6,5 @@
     <color name="custom">#45A9D675</color>
     <color name="red">#FF0000</color>
     <color name="pinChecked">#EDD60C</color>
+    <color name="qaBackground">#D5844FE3</color>
 </resources>

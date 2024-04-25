@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +23,6 @@ public class Login extends AppCompatActivity {
     TextInputEditText textInputEditTextUsername, textInputEditTextPassword;
     ProgressBar progressBar;
     TextView textViewSignUp;
-    ImageView tweet, insta, twit;
     Button buttonLogin;
 
     @Override
@@ -45,31 +43,6 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        tweet = findViewById(R.id.facebook);
-        insta = findViewById(R.id.instagram);
-        twit = findViewById(R.id.twitter);
-
-        tweet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gotoUrl("https://www.facebook.com/");
-            }
-        });
-
-        insta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gotoUrl("https://www.instagram.com/");
-            }
-        });
-
-        twit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gotoUrl("https://www.twitter.com/");
-            }
-        });
 
         textInputEditTextUsername = findViewById(R.id.username);
         textInputEditTextPassword = findViewById(R.id.password);
@@ -101,9 +74,12 @@ public class Login extends AppCompatActivity {
                             progressBar.setVisibility(View.GONE);
                             if(data.equals("Login Success")) {
                                 updateFromPHP(username);
+                                data = "Успешно вписване!";
                                 Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getApplication(), MainActivity.class);
                                 startActivity(intent);
+                            }else{
+                                Toast.makeText(getApplicationContext(), "Неуспешно вписване!", Toast.LENGTH_SHORT).show();
                             }
                         }
                         @Override
@@ -113,7 +89,7 @@ public class Login extends AppCompatActivity {
                         }
                     });
                 }else {
-                    Toast.makeText(getApplicationContext(), "All fields are required!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Всички полета са задължителни!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
